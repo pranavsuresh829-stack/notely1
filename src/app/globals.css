@@ -1,0 +1,61 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --background: #faf7f0;
+  --foreground: #161616;
+  --card: #ffffff;
+  --card-border: rgba(22, 22, 22, 0.08);
+  --muted: #7a7367;
+  --dot: rgba(22, 22, 22, 0.07);
+
+  --brand-blue: #5fc7f2;
+  --brand-blue-dark: #2ba6db;
+  --brand-pink: #f2547d;
+  --brand-pink-dark: #d63763;
+  --brand-yellow: #f4c64b;
+  --brand-blush: #e79bc0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-muted: var(--muted);
+
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-blue-dark: var(--brand-blue-dark);
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-pink-dark: var(--brand-pink-dark);
+  --color-brand-yellow: var(--brand-yellow);
+  --color-brand-blush: var(--brand-blush);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #17191c;
+    --foreground: #f2efe9;
+    --card: #202327;
+    --card-border: rgba(255, 255, 255, 0.08);
+    --muted: #9a978f;
+    --dot: rgba(255, 255, 255, 0.06);
+
+    --brand-blue: #6fd0f7;
+    --brand-blue-dark: #3fb4e6;
+    --brand-pink: #f97a9c;
+    --brand-pink-dark: #e85c82;
+    --brand-yellow: #f7d272;
+    --brand-blush: #e79bc0;
+  }
+}
+
+body {
+  background-color: var(--background);
+  background-image: radial-gradient(var(--dot) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  color: var(--foreground);
+}
