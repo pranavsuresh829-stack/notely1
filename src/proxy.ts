@@ -8,7 +8,7 @@ import { NextResponse, type NextRequest } from "next/server";
 // (see src/lib/supabase/session.ts), since a proxy matcher mistake
 // shouldn't be the only thing standing between a request and someone
 // else's lectures.
-const PUBLIC_PATHS = ["/login", "/auth/callback", "/auth/signout"];
+const PUBLIC_PATHS = ["/login", "/auth/signout"];
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });

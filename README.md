@@ -10,7 +10,7 @@ A friendly, free, open-source Turbo AI alternative. Record or upload a lecture. 
 
 ## What it does
 
-1. Sign in with just your email (magic link — no password to set or remember)
+1. Create an account with an email + password (or sign back in)
 2. Record a lecture with your browser mic, or upload an audio file
 3. Transcribe the audio
 4. Turn the transcript into structured notes (headings, bullets, key terms)
@@ -43,9 +43,9 @@ The defaults (`TRANSCRIPTION_PROVIDER=groq`, `LLM_PROVIDER=groq`) only need the 
 
 ### 2. Set up the database
 
-In your Supabase project's SQL Editor, run [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) and then [`supabase/migrations/0002_auth.sql`](supabase/migrations/0002_auth.sql), in that order. Together they create the `lectures`, `notes`, `flashcards`, and `quiz_questions` tables, a private `lecture-audio` storage bucket, and the `user_id` column that ties lectures to whoever's signed in.
+In your Supabase project's SQL Editor, run [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql), [`supabase/migrations/0002_auth.sql`](supabase/migrations/0002_auth.sql), and [`supabase/migrations/0003_pdf_support.sql`](supabase/migrations/0003_pdf_support.sql), in that order. Together they create the `lectures`, `notes`, `flashcards`, and `quiz_questions` tables, a private storage bucket for uploaded audio/PDFs, and the `user_id` column that ties lectures to whoever's signed in.
 
-Sign-in itself needs no extra Supabase setup — email auth (magic link) is on by default on a new project, using Supabase's own built-in mail sender. That sender is rate-limited and occasionally lands in spam, which is fine for personal use; if you outgrow it, Supabase Auth settings let you plug in your own SMTP provider.
+Sign-in is email + password, using Supabase's own built-in auth — no extra setup needed to make it *work*. One setting worth changing: Supabase requires email confirmation by default, which means a brand-new account can't sign in until it sends a confirmation email through Supabase's low-volume built-in mail sender (easy to rate-limit if you're testing a lot). Go to **Authentication → Providers → Email** and turn **"Confirm email" off** for instant sign-up with no email step at all. If you'd rather keep confirmation on for real deployments, Supabase Auth settings let you plug in your own SMTP provider to remove the rate limit instead.
 
 ### 3. Run locally
 
@@ -100,6 +100,6 @@ So with the default Groq setup, even a full course load (~15 hours of lectures/m
 
 ## Known limits (v1)
 
-- Sign-in is magic-link only — no password option, no OAuth providers (Google, etc.) wired up yet
+- Sign-in is email + password only — no OAuth providers (Google, etc.) wired up yet, and no "forgot password" flow (reset it directly in the Supabase dashboard under Authentication → Users if you get locked out)
 - Long recordings (60+ min) can take a few minutes to transcribe and generate notes for; the processing pipeline runs as three sequential steps (upload → transcribe → generate) with progress shown in the UI, and a "Retry" button if a step fails partway
 - Vercel's default function timeout may need raising (`maxDuration` is already set to 300s in the API routes) if you're on a plan with a lower cap
