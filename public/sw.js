@@ -2,8 +2,11 @@
 // criteria (manifest + registered SW + fetch handler). No offline caching
 // of API responses — recording/upload/transcription all need the network
 // anyway, so we only cache the static app shell.
-const CACHE_NAME = "notely-v1";
-const APP_SHELL = ["/", "/manifest.json", "/icon-192.png", "/icon-512.png"];
+// v2: dropped "/" from the precache list — it 307-redirects to /login for a
+// signed-out visitor, and the Cache API rejects caching any redirected
+// response, which made install() fail on every first visit.
+const CACHE_NAME = "notely-v2";
+const APP_SHELL = ["/manifest.json", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
