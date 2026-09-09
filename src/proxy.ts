@@ -39,11 +39,23 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isPublicPath = PUBLIC_PATHS.some((p) => pathname.startsWith(p));
 
+  // A redirect must carry forward whatever fresh session cookies getUser()
+  // just wrote onto `response` above — Supabase rotates the refresh token on
+  // every use, and a redirect response that drops that rotation leaves the
+  // browser holding an already-consumed refresh token. That fails on the
+  // very next request, which redirects again, forever: an infinite
+  // "/" <-> "/login" loop, not just an occasional stale session.
+  function redirectTo(path: string) {
+    const redirect = NextResponse.redirect(new URL(path, request.url));
+    response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
+    return redirect;
+  }
+
   if (!user && !isPublicPath) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return redirectTo("/login");
   }
   if (user && pathname === "/login") {
-    return NextResponse.redirect(new URL("/", request.url));
+    return redirectTo("/");
   }
 
   return response;
